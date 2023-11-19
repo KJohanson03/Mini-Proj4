@@ -71,7 +71,7 @@ public class AssociativeArray<K, V> {
     	 KVPair<K,V> tempPair =  this.pairs[i];
     	 						   // makes a deep clone
     	 if (!(tempPair == null)){ // if value is not not set the key and val to its the clone to its equiv in the original array
-    	 	System.out.println(tempPair + "findout-------------" + i);
+    	 	
     		K tempKey =  tempPair.key;
     	 	V tempVal = tempPair.value;
     	 
@@ -99,11 +99,16 @@ public class AssociativeArray<K, V> {
 		  returnString = "{ ";
 	  } // if ()
 
-
 	  for (int i = 0; i < pairs.length; i++) { // iterates through the whole array
 		  if (!(pairs[i] == null)) { // checks if there is a key at the position thats not null
 			  String tempKey = (String) pairs[i].key.toString();
-			  String tempValue = (String) pairs[i].value.toString();
+        String tempValue = "";
+        try { // checks if Value is null or not ( handles null case if it is)
+			     tempValue = (String) pairs[i].value.toString();
+        } catch ( NullPointerException e) {
+           tempValue = null;
+        } // catch
+
 			  if (tempSize != 1) {
 				  returnString = returnString.concat(tempKey + ": " + tempValue + ", "); 	
 				  tempSize--;
@@ -125,6 +130,10 @@ public class AssociativeArray<K, V> {
    * get(key) will return value.
    */
   public void set(K key, V value){
+    if (key == null) { // checks if key given is null
+      return ;
+    } // if    
+
 	 try {
 	  if (hasKey(key)) {
 		  this.pairs[find(key)].value = value;
@@ -160,13 +169,22 @@ public class AssociativeArray<K, V> {
    *                              array.
    */
   public V get(K key) throws KeyNotFoundException {
+    if (key == null) { // checks if key given is null
+      throw new KeyNotFoundException(); 
+    } // if
     return this.pairs[find(key)].value;
   } // get(K)
 
   /**
    * Determine if key appears in the associative array.
+   * if key given is null ignore
    */
   public boolean hasKey(K key) {
+    if (key == null) { // checks if key given is null
+      return false;
+    } // if
+
+
 	  for (int i = 0; i < this.pairs.length; i++) { // loops through all the key value value pairs
 		  KVPair<K,V> curPair = this.pairs[i];
 		 if (!(curPair == null)) {
